@@ -89,8 +89,8 @@ export default function ProductScreen() {
               </div>
               <div>
                 <button
-                  className="bg-[#E84545] opacity-75 hover:opacity-100 text-white
-                 hover:text-gray-100 rounded-full px-10 py-2 font-semibold"
+                  className="bg-indigo-500 opacity-75 hover:opacity-100 text-white
+                  hover:bg-indigo-600 rounded-full px-10 py-2 font-semibold"
                   onClick={addToCartHandler}
                 >
                   BUY NOW

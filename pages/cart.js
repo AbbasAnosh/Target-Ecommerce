@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
+import dynamic from "next/dynamic";
 
 const cartDetails = () => {
   const { state, dispatch } = useContext(Store);
@@ -14,17 +15,20 @@ const cartDetails = () => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
 
+  const updateCartHanldler = (item, qty) => {
+    const quantity = Number(qty);
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
+  };
   return (
     <Layout>
       <div className="mx-auto mt-10">
-        <div className="flex shadow-md my-10">
+        <div className="flex flex-col md:flex-row lg:flex-row shadow-md my-10">
           <div className="w-3/4 bg-primary px-10 py-10">
             <div className="flex justify-between border-b pb-8">
               <h1 className="font-semibold text-2xl text-secondary">
                 Shopping Cart
               </h1>
               <h2 className="font-semibold text-2xl text-secondary">
-                {" "}
                 {cartItems.reduce((a, c) => a + c.quantity, 0)} Items
               </h2>
             </div>
@@ -71,7 +75,17 @@ const cartDetails = () => {
                   </div>
                 </div>
                 <div className="flex text-secondary justify-center w-1/5">
-                  {item.quantity}
+                  <select
+                    className="bg-primary"
+                    value={item.quantity}
+                    onChange={(e) => updateCartHanldler(item, e.target.value)}
+                  >
+                    {[...Array(item.countInStock).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <span className="text-center text-secondary w-1/5 font-semibold text-sm">
                   ${item.price}
@@ -116,4 +130,4 @@ const cartDetails = () => {
   );
 };
 
-export default cartDetails;
+export default dynamic(() => Promise.resolve(cartDetails), { ssr: false });
