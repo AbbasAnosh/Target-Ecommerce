@@ -1,12 +1,17 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CartIcon, ProfileIcon } from "../pages/icons";
 import { Store } from "../utils/Store";
+import Banner from "./Banner";
 
 const Layout = ({ children }) => {
   const { state } = useContext(Store);
   const { cart } = state;
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+  useEffect(() => {
+    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  }, [cart.cartItems]);
   return (
     <>
       <Head>
@@ -24,12 +29,12 @@ const Layout = ({ children }) => {
               <Link href="/cart">
                 <a className="p-2 relative inline-block">
                   <CartIcon />
-                  {cart.cartItems.length > 0 && (
+                  {cartItemsCount > 0 && (
                     <span
                       className="absolute top-2 right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold
                      leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"
                     >
-                      {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                      {cartItemsCount}
                     </span>
                   )}
                 </a>
@@ -42,7 +47,10 @@ const Layout = ({ children }) => {
             </div>
           </nav>
         </header>
-        <main className="container m-auto mt-4 px-4">{children}</main>
+        <main className="container m-auto mt-4 px-4">
+          {/* <Banner /> */}
+          {children}
+        </main>
         <footer className="flex h-10 text-secondary justify-center item-center">
           <p>Copyright &copy; 2022 Target.</p>
         </footer>
