@@ -3,7 +3,10 @@ import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
 import { CartIcon, ProfileIcon } from "../pages/icons";
 import { Store } from "../utils/Store";
+import { ToastContainer } from "react-toastify";
 import Banner from "./Banner";
+import { useSession } from "next-auth/react";
+import "react-toastify/dist/ReactToastify.css";
 
 const Layout = ({ children }) => {
   const { state } = useContext(Store);
@@ -12,11 +15,15 @@ const Layout = ({ children }) => {
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
+
+  const { status, data: session } = useSession();
   return (
     <>
       <Head>
         <title>Target.</title>
       </Head>
+
+      <ToastContainer position="bottome-center" limit={1} />
 
       <div className="flex min-h-screen py-3 flex-col justify-between">
         <header className="">
@@ -39,11 +46,17 @@ const Layout = ({ children }) => {
                   )}
                 </a>
               </Link>
-              <Link href="/login">
-                <a className="p-2">
-                  <ProfileIcon />
-                </a>
-              </Link>
+              {status === "loading" ? (
+                "Loading"
+              ) : session?.user ? (
+                session.user.name
+              ) : (
+                <Link href="/login">
+                  <a className="p-2">
+                    <ProfileIcon />
+                  </a>
+                </Link>
+              )}
             </div>
           </nav>
         </header>
