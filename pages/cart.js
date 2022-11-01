@@ -4,8 +4,10 @@ import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
 const cartDetails = () => {
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
@@ -23,7 +25,7 @@ const cartDetails = () => {
     <Layout>
       <div className="mx-auto mt-10">
         <div className="flex flex-col md:flex-row lg:flex-row shadow-md my-10">
-          <div className="w-3/4 bg-primary px-10 py-10">
+          <div className="w-3/4 bg-primary px-10 py-10 rounded-lg">
             <div className="flex justify-between border-b pb-8">
               <h1 className="font-semibold text-2xl text-secondary">
                 Shopping Cart
@@ -119,7 +121,10 @@ const cartDetails = () => {
                   $ {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                 </span>
               </div>
-              <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
+              <button
+                onClick={() => router.push("/shipping")}
+                className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full"
+              >
                 Checkout
               </button>
             </div>
